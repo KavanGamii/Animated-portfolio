@@ -41,11 +41,12 @@ import {
 } from "lucide-react";
 
 import heroVideo from "@/assets/hero-bg.mp4";
+import footerVideo from "@/assets/footer.mp4";
 import aboutImg from "@/assets/about-img.png";
 import charRobot from "@/assets/char-robot.jpg";
-import charDesigner from "@/assets/char-designer.jpg";
+import charDesigner from "@/assets/side-image.png";
 import charMascot from "@/assets/char-mascot.jpg";
-import charWave from "@/assets/char-wave.jpg";
+import charWave from "@/assets/contact-from.png";
 import { useLenis } from "@/hooks/use-lenis";
 
 export const Route = createFileRoute("/")({
@@ -323,11 +324,10 @@ function Nav() {
         className="fixed left-1/2 top-4 z-50 w-[calc(100%-1.5rem)] max-w-6xl -translate-x-1/2 sm:top-6"
       >
         <div
-          className={`glass-card flex items-center justify-between gap-2 rounded-full py-2 pl-2 pr-2 transition-all duration-500 ${
-            scrolled
+          className={`glass-card flex items-center justify-between gap-2 rounded-full py-2 pl-2 pr-2 transition-all duration-500 ${scrolled
               ? "shadow-[0_16px_50px_-24px_rgba(0,0,0,0.4)]"
               : "shadow-[0_8px_30px_-24px_rgba(0,0,0,0.25)]"
-          }`}
+            }`}
         >
           <Logo />
 
@@ -353,9 +353,8 @@ function Nav() {
                     />
                   )}
                   <span
-                    className={`relative z-10 transition-colors ${
-                      on ? "text-foreground" : "text-muted-foreground"
-                    }`}
+                    className={`relative z-10 transition-colors ${on ? "text-foreground" : "text-muted-foreground"
+                      }`}
                   >
                     {n.label}
                   </span>
@@ -1335,10 +1334,10 @@ function Contact() {
             </Reveal>
 
             <div className="mt-14 grid grid-cols-2 sm:grid-cols-4 gap-6">
-              <ContactLink icon={Mail} label="Email" v="kavangami13@gmail.com" href="mailto:kavangami13@gmail.com" />
               <ContactLink icon={Github} label="GitHub" v="KavanGamii" href="https://github.com/KavanGamii/" />
               <ContactLink icon={Linkedin} label="LinkedIn" v="kavanpatel-it" href="https://www.linkedin.com/in/kavanpatel-it/" />
               <ContactLink icon={MapPin} label="Based in" v="Ahmedabad, IN" href="#" />
+              <ContactLink icon={Mail} label="Email" v="kavangami13@gmail.com" href="mailto:kavangami13@gmail.com" />
             </div>
           </div>
 
@@ -1369,18 +1368,99 @@ function ContactLink({ icon: Icon, label, v, href }: { icon: typeof Mail; label:
 
 function Footer() {
   return (
-    <footer className="relative px-6 sm:px-10 lg:px-16 py-12 border-t border-border">
-      <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <img src={charMascot} alt="" className="h-10 w-10 rounded-full breathe" loading="lazy" />
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Kavan Gami · Built with love, GSAP & Lenis.
-          </p>
+    <footer className="relative overflow-hidden border-t border-border">
+      {/* background video */}
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        src={footerVideo}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+      />
+      {/* legibility overlays (match the hero) */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-background via-background/75 to-background/85" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-background/85 via-transparent to-background/40" />
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 py-20 sm:py-28">
+        {/* CTA */}
+        <div className="max-w-3xl">
+          <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[0.95] tracking-[-0.04em] font-medium text-foreground">
+            Let's build something
+            <span className="italic font-normal text-foreground/70"> worth touching.</span>
+          </h2>
+          <a
+            href="mailto:kavangami13@gmail.com"
+            className="group mt-8 inline-flex items-center gap-3 rounded-full bg-foreground px-7 py-4 text-background font-button transition-colors hover:bg-foreground/90"
+          >
+            Start a conversation
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </a>
         </div>
-        <div className="flex items-center gap-5 text-sm text-muted-foreground font-button">
-          <a href="https://github.com/KavanGamii/" className="hover:text-foreground transition-colors">GitHub</a>
-          <a href="https://www.linkedin.com/in/kavanpatel-it/" className="hover:text-foreground transition-colors">LinkedIn</a>
-          <a href="mailto:kavangami13@gmail.com" className="hover:text-foreground transition-colors">Email</a>
+
+        {/* link columns */}
+        <div className="mt-16 grid grid-cols-2 gap-8 border-t border-border/60 pt-10 sm:grid-cols-3">
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-button">
+              Navigate
+            </p>
+            <ul className="mt-4 space-y-2 text-sm">
+              {NAV.map((n) => (
+                <li key={n.href}>
+                  <a
+                    href={n.href}
+                    className="text-foreground/70 transition-colors hover:text-foreground"
+                  >
+                    {n.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-button">
+              Connect
+            </p>
+            <ul className="mt-4 space-y-2 text-sm">
+              <li>
+                <a href="https://github.com/KavanGamii/" target="_blank" rel="noreferrer" className="text-foreground/70 transition-colors hover:text-foreground">
+                  GitHub
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/in/kavanpatel-it/" target="_blank" rel="noreferrer" className="text-foreground/70 transition-colors hover:text-foreground">
+                  LinkedIn
+                </a>
+              </li>
+              <li>
+                <a href="mailto:kavangami13@gmail.com" className="text-foreground/70 transition-colors hover:text-foreground">
+                  Email
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div className="flex items-end sm:justify-end">
+            <a
+              href="#top"
+              className="group inline-flex items-center gap-2 text-sm font-button text-foreground/70 transition-colors hover:text-foreground"
+            >
+              Back to top
+              <span className="grid h-8 w-8 place-items-center rounded-full border border-border transition-all duration-300 group-hover:-translate-y-0.5 group-hover:border-accent/50">
+                ↑
+              </span>
+            </a>
+          </div>
+        </div>
+
+        {/* bottom bar */}
+        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-border/60 pt-6 sm:flex-row sm:items-center">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Kavan Gami · Built with GSAP & Lenis.
+          </p>
+          <p className="font-display text-lg text-foreground/80">
+            Kavan <span className="italic font-normal">Gami.</span>
+          </p>
         </div>
       </div>
     </footer>
