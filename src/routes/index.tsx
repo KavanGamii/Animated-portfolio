@@ -41,7 +41,7 @@ import {
 } from "lucide-react";
 
 import heroVideo from "@/assets/hero-bg.mp4";
-import charDev from "@/assets/char-dev.jpg";
+import aboutImg from "@/assets/about-img.png";
 import charRobot from "@/assets/char-robot.jpg";
 import charDesigner from "@/assets/char-designer.jpg";
 import charMascot from "@/assets/char-mascot.jpg";
@@ -241,77 +241,12 @@ function SectionLabel({ n, label }: { n: string; label: string }) {
 
 const SECTION_IDS = ["about", "work", "experience", "playground", "contact"];
 
-/* Out-of-the-box animated brand logo — a geometric "K" monogram whose top arm
-   escapes a rounded box. GSAP draws the box + strokes in, an accent segment
-   orbits the frame, a glowing spark "breaks out", the whole mark floats, and it
-   springs magnetically toward the cursor on hover. */
+/* Brand logo — a clean monogram tile: a crisp "K" in a rounded dark tile with an
+   accent status dot that breaks out of the corner and pulses. Magnetic, with a
+   subtle tilt on hover. */
 function Logo() {
   const ref = useRef<HTMLAnchorElement>(null);
   const [p, setP] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const ctx = gsap.context(() => {
-      const reduced = window.matchMedia?.(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      gsap.set([".kg-box", ".kg-stroke"], {
-        strokeDasharray: 1,
-        strokeDashoffset: 1,
-      });
-      gsap.set(".kg-orbit", {
-        strokeDasharray: "0.14 0.86",
-        strokeDashoffset: 0,
-      });
-      gsap.set([".kg-dot", ".kg-halo"], {
-        scale: 0,
-        transformOrigin: "50% 50%",
-      });
-
-      if (reduced) {
-        gsap.set([".kg-box", ".kg-stroke"], { strokeDashoffset: 0 });
-        gsap.set([".kg-dot", ".kg-halo"], { scale: 1 });
-        return;
-      }
-
-      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
-      tl.to(".kg-box", { strokeDashoffset: 0, duration: 0.7 })
-        .to(
-          ".kg-stroke",
-          { strokeDashoffset: 0, duration: 0.5, stagger: 0.1 },
-          "-=0.35",
-        )
-        .to(".kg-dot", { scale: 1, duration: 0.5, ease: "back.out(3)" }, "-=0.1")
-        .to(".kg-halo", { scale: 1, duration: 0.5 }, "<");
-
-      // ambient life
-      gsap.to(".kg-orbit", {
-        strokeDashoffset: -1,
-        duration: 5,
-        repeat: -1,
-        ease: "none",
-        delay: 0.8,
-      });
-      gsap.to(".kg-svg", {
-        y: -1.5,
-        duration: 2.4,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-      });
-      gsap.to(".kg-halo", {
-        scale: 1.35,
-        opacity: 0.08,
-        duration: 1.5,
-        yoyo: true,
-        repeat: -1,
-        ease: "sine.inOut",
-        delay: 1.2,
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
 
   const onMove = (e: React.MouseEvent) => {
     const el = ref.current;
@@ -331,111 +266,11 @@ function Logo() {
       onMouseLeave={() => setP({ x: 0, y: 0 })}
       animate={{ x: p.x, y: p.y }}
       transition={{ type: "spring", stiffness: 250, damping: 18 }}
-      className="group flex shrink-0 items-center gap-2.5 rounded-full py-1 pl-1 pr-1.5"
+      className="group flex shrink-0 items-center rounded-full px-1.5 py-1 pl-3"
       aria-label="Kavan Gami — UI Developer, back to top"
     >
-      <span className="relative grid h-10 w-10 shrink-0 place-items-center">
-        <svg
-          className="kg-svg absolute inset-0 h-full w-full text-foreground"
-          viewBox="0 0 48 48"
-          fill="none"
-          aria-hidden="true"
-        >
-          {/* glowing "escape" halo */}
-          <circle
-            className="kg-halo"
-            cx="41"
-            cy="11"
-            r="6"
-            fill="var(--accent)"
-            opacity="0.14"
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
-          />
-          {/* the box */}
-          <rect
-            className="kg-box"
-            x="6"
-            y="10"
-            width="30"
-            height="30"
-            rx="9"
-            pathLength={1}
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-          />
-          {/* accent segment orbiting the box */}
-          <rect
-            className="kg-orbit"
-            x="6"
-            y="10"
-            width="30"
-            height="30"
-            rx="9"
-            pathLength={1}
-            stroke="var(--accent)"
-            strokeWidth="2.25"
-            strokeLinecap="round"
-            fill="none"
-          />
-          {/* the K — its top arm breaks out of the box */}
-          <g className="kg-glyph">
-            <line
-              className="kg-stroke"
-              x1="16"
-              y1="16"
-              x2="16"
-              y2="34"
-              pathLength={1}
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-            />
-            <line
-              className="kg-stroke"
-              x1="16"
-              y1="25"
-              x2="39"
-              y2="12"
-              pathLength={1}
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-            />
-            <line
-              className="kg-stroke"
-              x1="16"
-              y1="25"
-              x2="33"
-              y2="34"
-              pathLength={1}
-              stroke="currentColor"
-              strokeWidth="3"
-              strokeLinecap="round"
-              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
-            />
-          </g>
-          {/* the escaped spark */}
-          <circle
-            className="kg-dot"
-            cx="41"
-            cy="11"
-            r="3"
-            fill="var(--accent)"
-            style={{
-              transformBox: "fill-box",
-              transformOrigin: "center",
-              transform: "scale(0)",
-            }}
-          />
-        </svg>
-      </span>
-      <span className="hidden flex-col leading-none sm:flex">
-        <span className="relative font-display text-[15px] font-medium tracking-tight text-foreground">
+      <span className="flex flex-col leading-none">
+        <span className="kg-shimmer relative font-display text-base font-semibold tracking-tight sm:text-[17px]">
           Kavan <span className="italic font-normal">Gami</span>
           <span className="kg-underline absolute -bottom-1 left-0 h-px w-full bg-accent" />
         </span>
@@ -718,19 +553,9 @@ function Hero() {
         ))}
       </div>
 
-      <motion.div style={{ opacity }} className="relative z-10 flex h-full w-full flex-col justify-end pb-16 sm:pb-24 px-6 sm:px-10 lg:px-16">
+      <motion.div style={{ opacity }} className="relative z-10 flex h-full w-full flex-col justify-end pb-14 sm:pb-20 px-6 sm:px-10 lg:px-16">
         <div className="max-w-5xl">
-          <Reveal delay={0.3} y={20}>
-            <div className="mb-6 flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-foreground/70 font-button">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
-              </span>
-              Available for freelance · Q3 2026
-            </div>
-          </Reveal>
-
-          <h1 className="font-display text-[14vw] sm:text-[10vw] lg:text-[9vw] leading-[0.9] font-medium tracking-[-0.04em] text-foreground">
+          <h1 className="font-display text-[14vw] sm:text-[10vw] lg:text-[8.5vw] leading-[0.88] font-medium tracking-[-0.04em] text-foreground">
             <Reveal y={80}>
               <span className="block">Kavan</span>
             </Reveal>
@@ -739,32 +564,75 @@ function Hero() {
             </Reveal>
           </h1>
 
-          <Reveal delay={0.5}>
-            <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-              <p className="max-w-xl text-base sm:text-lg text-foreground/80 leading-relaxed">
-                UI Developer & Web Designer crafting cinematic, high-performance
-                frontend experiences with{" "}
-                <span className="text-foreground">React</span>,{" "}
-                <span className="text-foreground">Tailwind</span>,{" "}
-                <span className="text-foreground">GSAP</span> and{" "}
-                <span className="text-foreground">WordPress</span>.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                <a
-                  href="#work"
-                  className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm text-background font-button hover:bg-foreground/90 transition"
-                >
-                  See selected work
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </a>
-                <a
-                  href="mailto:kavangami13@gmail.com"
-                  className="inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/60 backdrop-blur px-6 py-3 text-sm text-foreground font-button hover:bg-background transition"
-                >
-                  <Download className="h-4 w-4" />
-                  Resume
-                </a>
+          {/* role + value proposition */}
+          <Reveal delay={0.45}>
+            <p className="mt-6 max-w-2xl text-base sm:text-lg text-foreground/80 leading-relaxed">
+              <span className="font-medium text-foreground">
+                UI Developer &amp; Web Designer
+              </span>{" "}
+              crafting cinematic, high-performance frontend experiences.
+            </p>
+          </Reveal>
+
+          {/* informative facts */}
+          <Reveal delay={0.55}>
+            <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 font-button text-sm">
+              <span className="flex items-baseline gap-2">
+                <span className="font-medium text-foreground">2+ yrs</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-foreground/45">
+                  Experience
+                </span>
+              </span>
+              <span className="hidden h-4 w-px bg-foreground/15 sm:block" />
+              <span className="flex items-baseline gap-2">
+                <span className="font-medium text-foreground">Frontend + Motion</span>
+                <span className="text-xs uppercase tracking-[0.15em] text-foreground/45">
+                  Focus
+                </span>
+              </span>
+            </div>
+          </Reveal>
+
+          {/* tech stack — compact animated marquee, highlights on hover */}
+          <Reveal delay={0.6}>
+            <div className="group/skills relative mt-6 max-w-xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+              <div className="marquee flex w-max gap-2 group-hover/skills:[animation-play-state:paused]">
+                {[
+                  "React", "Next.js", "TypeScript", "JavaScript", "Tailwind",
+                  "SCSS", "GSAP", "Lenis", "Framer Motion", "Three.js",
+                  "WordPress", "Figma", "Git",
+                  "React", "Next.js", "TypeScript", "JavaScript", "Tailwind",
+                  "SCSS", "GSAP", "Lenis", "Framer Motion", "Three.js",
+                  "WordPress", "Figma", "Git",
+                ].map((t, i) => (
+                  <span
+                    key={i}
+                    className="whitespace-nowrap rounded-full border border-foreground/15 bg-background/50 px-3 py-1 text-xs font-button text-foreground/80 backdrop-blur transition-colors duration-300 hover:border-accent/60 hover:bg-background/70 hover:text-foreground"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
+            </div>
+          </Reveal>
+
+          {/* CTAs */}
+          <Reveal delay={0.75}>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href="#work"
+                className="group inline-flex items-center gap-2 rounded-full bg-foreground px-6 py-3 text-sm text-background font-button hover:bg-foreground/90 transition"
+              >
+                See selected work
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+              <a
+                href="mailto:kavangami13@gmail.com"
+                className="inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/60 backdrop-blur px-6 py-3 text-sm text-foreground font-button hover:bg-background transition"
+              >
+                <Download className="h-4 w-4" />
+                Resume
+              </a>
             </div>
           </Reveal>
         </div>
@@ -805,53 +673,118 @@ function About() {
       <div className="mx-auto max-w-7xl">
         <Reveal><SectionLabel n="02" label="About" /></Reveal>
 
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-          <div className="lg:col-span-7">
-            <Reveal>
-              <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.03em] font-medium">
-                I build interfaces that
-                <span className="italic font-normal text-foreground/70"> feel </span>
-                as good as they look.
-              </h2>
-            </Reveal>
-            <Reveal delay={0.15}>
-              <p className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground">
-                I'm a UI Developer with 2+ years of professional experience
-                delivering pixel-perfect, responsive interfaces for product
-                companies, agencies and government clients. I translate Figma
-                into reusable, token-based components — then layer in GSAP and
-                Lenis to make it move like something you want to keep touching.
-              </p>
-            </Reveal>
+        {/* heading */}
+        <Reveal className="mt-10 block max-w-4xl">
+          <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl leading-[1.02] tracking-[-0.03em] font-medium">
+            I build interfaces that
+            <span className="italic font-normal text-foreground/70"> feel </span>
+            as good as they look.
+          </h2>
+        </Reveal>
 
-            <div className="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {[
-                { k: "Based in", v: "Ahmedabad" },
-                { k: "Focus", v: "Frontend + Motion" },
-                { k: "Education", v: "B.Tech IT · Ganpat" },
-                { k: "Stack", v: "React · WP · GSAP" },
-              ].map((x) => (
-                <Reveal key={x.k} delay={0.05}>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-button">{x.k}</p>
-                    <p className="mt-2 font-display text-lg">{x.v}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-
-          <div className="lg:col-span-5">
-            <motion.div style={{ y: smooth }} className="relative">
-              <div className="relative overflow-hidden rounded-3xl bg-secondary-bg aspect-[4/5]">
-                <img src={charDev} alt="Kavan illustration" className="h-full w-full object-cover" loading="lazy" />
-              </div>
-              <div className="absolute -bottom-6 -left-6 glass-card rounded-2xl p-4 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.3)]">
-                <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-button">Currently</p>
-                <p className="mt-1 font-display">Softqube Technology</p>
-              </div>
+        {/* bento grid */}
+        <div className="mt-12 grid grid-cols-1 gap-4 lg:grid-cols-12 lg:items-stretch">
+          {/* portrait */}
+          <Reveal className="lg:col-span-5">
+            <motion.div
+              style={{ y: smooth }}
+              className="group relative h-full min-h-[380px] overflow-hidden rounded-3xl border border-border bg-secondary-bg"
+            >
+              <img
+                src={aboutImg}
+                alt="Kavan Gami — 3D illustration"
+                className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
+                loading="lazy"
+              />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent" />
             </motion.div>
-          </div>
+          </Reveal>
+
+          {/* right column: bio + compact facts */}
+          <Reveal className="lg:col-span-7" delay={0.1}>
+            <div className="flex h-full flex-col gap-4">
+              {/* bio + skills marquee */}
+              <div className="flex flex-col gap-6 rounded-3xl border border-border bg-card/60 p-6 backdrop-blur sm:p-8">
+                <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  I'm a{" "}
+                  <span className="font-medium text-foreground">
+                    UI Developer &amp; Web Designer
+                  </span>{" "}
+                  with 2+ years turning Figma into pixel-perfect, token-based
+                  components — then layering in{" "}
+                  <span className="text-foreground">GSAP</span> and{" "}
+                  <span className="text-foreground">Lenis</span> so every
+                  interface moves like something you want to keep touching.
+                  Shipped for product companies, agencies and government clients.
+                </p>
+
+                {/* what I do */}
+                <div className="grid grid-cols-1 gap-x-8 gap-y-4 sm:grid-cols-2">
+                  {[
+                    { t: "Frontend Development", d: "React · TypeScript · Tailwind" },
+                    { t: "UI Engineering", d: "Figma-to-code · design systems" },
+                    { t: "Motion & Animation", d: "GSAP · ScrollTrigger · Lenis" },
+                    { t: "WordPress + ACF", d: "Custom, editor-friendly themes" },
+                  ].map((s) => (
+                    <div
+                      key={s.t}
+                      className="group/do flex items-start gap-3 border-t border-border pt-4"
+                    >
+                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-accent transition-transform duration-300 group-hover/do:scale-[1.8]" />
+                      <div>
+                        <p className="font-display text-base leading-tight">{s.t}</p>
+                        <p className="mt-0.5 text-xs text-muted-foreground font-button">
+                          {s.d}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* skills marquee */}
+                <div className="group/skills relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+                  <div className="marquee flex w-max gap-2 group-hover/skills:[animation-play-state:paused]">
+                    {[
+                      "React", "Next.js", "TypeScript", "JavaScript", "Tailwind",
+                      "SCSS", "GSAP", "Lenis", "Framer Motion", "Three.js",
+                      "WordPress", "Figma", "Git",
+                      "React", "Next.js", "TypeScript", "JavaScript", "Tailwind",
+                      "SCSS", "GSAP", "Lenis", "Framer Motion", "Three.js",
+                      "WordPress", "Figma", "Git",
+                    ].map((t, i) => (
+                      <span
+                        key={i}
+                        className="whitespace-nowrap rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-button text-foreground/75"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* compact fact strip */}
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  { k: "Experience", v: "2+ yrs" },
+                  { k: "Focus", v: "Frontend + Motion" },
+                  { k: "Education", v: "B.Tech IT" },
+                  { k: "Based in", v: "Ahmedabad" },
+                ].map((x) => (
+                  <div
+                    key={x.k}
+                    className="group/fact rounded-2xl border border-border bg-card/60 p-4 backdrop-blur transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40"
+                  >
+                    <p className="font-display text-lg leading-tight">{x.v}</p>
+                    <p className="mt-1.5 flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground font-button">
+                      <span className="h-1 w-1 rounded-full bg-accent transition-all duration-300 group-hover/fact:w-3" />
+                      {x.k}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -889,53 +822,79 @@ function SkillCard({ skill, i }: { readonly skill: (typeof SKILLS)[number]; read
   };
 
   return (
-    <motion.div
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={reset}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.7, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="group relative h-44 rounded-3xl border border-border bg-card p-6"
-    >
-      {/* cursor spotlight (clipped to the rounded shape by border-radius) */}
-      <div
-        className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        style={{
-          background: `radial-gradient(220px circle at ${glow.x}% ${glow.y}%, rgba(79,124,255,0.18), transparent 65%)`,
-        }}
-      />
-      {/* accent border on hover */}
-      <div className="pointer-events-none absolute inset-0 rounded-3xl border border-accent/0 transition-colors duration-300 group-hover:border-accent/40" />
-
-      <div
-        className="relative flex h-full flex-col justify-between"
-        style={{ transform: "translateZ(35px)" }}
+    <div className="skill-card" style={{ perspective: 1000 }}>
+      <motion.div
+        ref={ref}
+        onMouseMove={onMove}
+        onMouseLeave={reset}
+        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+        className="group relative h-48 overflow-hidden rounded-3xl border border-border bg-card p-6 transition-shadow duration-300 hover:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.25)]"
       >
-        <div className="flex items-start justify-between">
-          <span className="grid h-11 w-11 place-items-center rounded-xl bg-secondary-bg text-foreground transition-colors duration-300 group-hover:bg-foreground group-hover:text-background">
-            <Icon className="h-5 w-5" />
-          </span>
-          <span className="font-display text-lg text-foreground/15 transition-colors duration-300 group-hover:text-accent/40">
-            {String(i + 1).padStart(2, "0")}
-          </span>
+        {/* cursor spotlight */}
+        <div
+          className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background: `radial-gradient(240px circle at ${glow.x}% ${glow.y}%, rgba(79,124,255,0.20), transparent 65%)`,
+          }}
+        />
+        {/* top accent line on hover */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        {/* accent border on hover */}
+        <div className="pointer-events-none absolute inset-0 rounded-3xl border border-accent/0 transition-colors duration-300 group-hover:border-accent/40" />
+
+        <div
+          className="relative flex h-full flex-col justify-between"
+          style={{ transform: "translateZ(45px)" }}
+        >
+          <div className="flex items-start justify-between">
+            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-secondary-bg text-foreground transition-all duration-300 group-hover:-rotate-6 group-hover:bg-foreground group-hover:text-background">
+              <Icon className="h-5 w-5" />
+            </span>
+            <span className="font-display text-2xl text-foreground/10 transition-colors duration-300 group-hover:text-accent/40">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+          </div>
+          <div>
+            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-button">
+              {skill.cat}
+            </p>
+            <div className="mt-1.5 flex items-center justify-between">
+              <h3 className="font-display text-xl tracking-tight">{skill.name}</h3>
+              <ArrowUpRight className="h-4 w-4 -translate-x-2 text-accent opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" />
+            </div>
+            <span className="mt-3 block h-0.5 w-8 rounded-full bg-accent/40 transition-all duration-500 ease-out group-hover:w-full group-hover:bg-accent" />
+          </div>
         </div>
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-button">
-            {skill.cat}
-          </p>
-          <h3 className="mt-1.5 font-display text-xl tracking-tight">{skill.name}</h3>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
 function Skills() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!ref.current) return;
+    const ctx = gsap.context(() => {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.from(".skill-card", {
+        y: 64,
+        opacity: 0,
+        scale: 0.94,
+        duration: 0.85,
+        ease: "power3.out",
+        stagger: { each: 0.07, grid: [3, 4], from: "start" },
+        scrollTrigger: { trigger: ".skills-grid", start: "top 80%" },
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="skills" className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
+    <section
+      id="skills"
+      ref={ref}
+      className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg"
+    >
       <div className="mx-auto max-w-7xl">
         <Reveal><SectionLabel n="03" label="Skills" /></Reveal>
         <div className="mt-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
@@ -952,10 +911,7 @@ function Skills() {
           </Reveal>
         </div>
 
-        <div
-          className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
-          style={{ perspective: 1200 }}
-        >
+        <div className="skills-grid mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {SKILLS.map((s, i) => (
             <SkillCard key={s.name} skill={s} i={i} />
           ))}

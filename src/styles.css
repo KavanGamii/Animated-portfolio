@@ -121,25 +121,38 @@
   animation: breathe 4s ease-in-out infinite;
 }
 
-/* Brand logo — draw-in + hover */
-.kg-svg {
-  overflow: visible;
+/* Brand logo — continuous accent shimmer sweeping through the wordmark */
+.kg-shimmer {
+  background: linear-gradient(
+    100deg,
+    var(--foreground) 0%,
+    var(--foreground) 42%,
+    var(--accent) 50%,
+    var(--foreground) 58%,
+    var(--foreground) 100%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: kg-shimmer 4.5s linear infinite;
 }
-.kg-glyph {
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+@keyframes kg-shimmer {
+  0% {
+    background-position: 160% 0;
+  }
+  100% {
+    background-position: -160% 0;
+  }
 }
-.group:hover .kg-glyph {
-  transform: rotate(-8deg) scale(1.05);
+@media (prefers-reduced-motion: reduce) {
+  .kg-shimmer {
+    animation: none;
+  }
 }
-.kg-orbit {
-  stroke-opacity: 0.9;
-  transition: stroke-opacity 0.4s ease;
-}
-.group:hover .kg-orbit {
-  stroke-opacity: 1;
-}
+
+/* Brand logo — wordmark underline on hover */
 .kg-underline {
   transform: scaleX(0);
   transform-origin: left center;

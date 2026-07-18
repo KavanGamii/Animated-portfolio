@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- rounded dark tile -->
+  <rect x="1" y="1" width="30" height="30" rx="8" fill="#161616">
+    <animate attributeName="rx" values="8;11;8" dur="3s" repeatCount="indefinite" />
+  </rect>
+  <!-- crisp K monogram -->
+  <g fill="none" stroke="#f7f4ef" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 9 V23" />
+    <path d="M12 16 L21 9" />
+    <path d="M12 16 L20 23" />
+  </g>
+  <!-- accent status dot that breaks out of the corner + pulses -->
+  <circle cx="25.5" cy="6.5" r="3.4" fill="#4f7cff" stroke="#161616" stroke-width="1.6">
+    <animate attributeName="r" values="3.4;4.4;3.4" dur="1.6s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="1;0.55;1" dur="1.6s" repeatCount="indefinite" />
+  </circle>
+</svg>
