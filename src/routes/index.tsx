@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import Matter from "matter-js";
 import {
   motion,
   AnimatePresence,
@@ -49,10 +48,6 @@ import charDesigner from "@/assets/side-image.png";
 import charMascot from "@/assets/char-mascot.jpg";
 import charWave from "@/assets/contact-from.png";
 import { useLenis } from "@/hooks/use-lenis";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
@@ -660,7 +655,7 @@ function Marquee() {
   const doubled = [...items, ...items];
   return (
     <div className="relative overflow-hidden border-y border-border py-6 bg-secondary-bg">
-      <div className="flex whitespace-nowrap marquee">
+      <div className="flex whitespace-nowrap marquee" style={{ animationDuration: "12s" }}>
         {doubled.map((t, i) => (
           <span key={i} className="mx-8 inline-flex items-center gap-8 font-display text-4xl sm:text-6xl text-foreground/80">
             {t}
@@ -812,150 +807,88 @@ const SKILL_CATEGORIES = (() => {
 })();
 
 function Skills() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const pillRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current) return;
-    
-    const container = containerRef.current;
-    
-    const Engine = Matter.Engine,
-      Runner = Matter.Runner,
-      MouseConstraint = Matter.MouseConstraint,
-      Mouse = Matter.Mouse,
-      World = Matter.World,
-      Bodies = Matter.Bodies;
-
-    const engine = Engine.create();
-    engine.gravity.y = 0.8;
-
-    const width = container.clientWidth;
-    const height = container.clientHeight;
-
-    const wallThickness = 200;
-    const ground = Bodies.rectangle(width / 2, height + wallThickness / 2, width * 2, wallThickness, { isStatic: true });
-    const leftWall = Bodies.rectangle(0 - wallThickness / 2, height / 2, wallThickness, height * 4, { isStatic: true });
-    const rightWall = Bodies.rectangle(width + wallThickness / 2, height / 2, wallThickness, height * 4, { isStatic: true });
-    const ceiling = Bodies.rectangle(width / 2, -1000, width * 2, wallThickness, { isStatic: true });
-
-    World.add(engine.world, [ground, leftWall, rightWall, ceiling]);
-
-    const bodies = SKILLS.map((skill, index) => {
-      const el = pillRefs.current[index];
-      const w = el ? el.offsetWidth : 150;
-      const h = el ? el.offsetHeight : 50;
-
-      const x = Math.random() * (width - w) + w / 2;
-      const y = -Math.random() * 500 - 200;
-
-      return Bodies.rectangle(x, y, w, h, {
-        chamfer: { radius: h / 2 },
-        restitution: 0.4,
-        friction: 0.1,
-        density: 0.001,
-      });
-    });
-
-    const mouse = Mouse.create(container);
-    const mouseConstraint = MouseConstraint.create(engine, {
-      mouse: mouse,
-      constraint: {
-        stiffness: 0.2,
-        render: { visible: false },
-      },
-    });
-    World.add(engine.world, mouseConstraint);
-
-    mouseConstraint.mouse.element.removeEventListener("mousewheel", mouseConstraint.mouse.mousewheel);
-    mouseConstraint.mouse.element.removeEventListener("DOMMouseScroll", mouseConstraint.mouse.mousewheel);
-
-    let animationFrameId: number;
-    const update = () => {
-      bodies.forEach((body, index) => {
-        // Out of bounds rescue
-        if (body.position.y > height + 200 || body.position.x < -200 || body.position.x > width + 200) {
-          Matter.Body.setPosition(body, { x: width / 2, y: 100 });
-          Matter.Body.setVelocity(body, { x: 0, y: 0 });
-        }
-
-        const el = pillRefs.current[index];
-        if (el) {
-          el.style.transform = `translate(-50%, -50%) translate(${body.position.x}px, ${body.position.y}px) rotate(${body.angle}rad)`;
-        }
-      });
-      animationFrameId = requestAnimationFrame(update);
-    };
-
-    const runner = Runner.create();
-    Runner.run(runner, engine);
-    update();
-
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: container,
-        start: "top 60%",
-        onEnter: () => {
-          World.add(engine.world, bodies);
-          bodies.forEach((body) => {
-            Matter.Body.setAngularVelocity(body, (Math.random() - 0.5) * 0.1);
-          });
-        },
-        once: true,
-      });
-    }, containerRef);
-
-    const handleResize = () => {
-      const newWidth = container.clientWidth;
-      const newHeight = container.clientHeight;
-      Matter.Body.setPosition(ground, { x: newWidth / 2, y: newHeight + wallThickness / 2 });
-      Matter.Body.setPosition(rightWall, { x: newWidth + wallThickness / 2, y: newHeight / 2 });
-    };
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      ctx.revert();
-      cancelAnimationFrame(animationFrameId);
-      Runner.stop(runner);
-      Engine.clear(engine);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const row1 = SKILLS.slice(0, 4);
+  const row2 = SKILLS.slice(4, 8);
+  const row3 = SKILLS.slice(8, 12);
+  
+  const repeat = (arr: typeof SKILLS, times: number) => {
+    return Array(times).fill(arr).flat();
+  };
 
   return (
-    <section id="skills" className="relative py-20 bg-foreground text-background overflow-hidden h-[500px] lg:h-[600px] flex items-center justify-center">
-      <div className="absolute top-20 left-1/2 -translate-x-1/2 text-center pointer-events-none z-10 w-full px-6 flex flex-col items-center">
-        <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-background/50 font-button">
-          <span className="text-background/30">03</span>
-          <span className="h-px w-8 bg-background/20" />
-          <span>Capabilities</span>
-        </div>
-        <h2 className="mt-8 font-display text-5xl sm:text-7xl lg:text-8xl leading-[1.05] tracking-[-0.03em] font-medium max-w-2xl text-center">
-          Interactive <br />
-          <span className="italic font-normal text-background/60">Toolkit.</span>
-        </h2>
-        <p className="mt-6 text-sm leading-relaxed text-background/60 max-w-xs text-center">
-          Grab, drag, and throw the physics pills around.
-        </p>
+    <section
+      id="skills"
+      ref={ref}
+      className="relative py-28 sm:py-40 bg-foreground text-background overflow-hidden"
+    >
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 mb-20 sm:mb-32 relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-8">
+        <Reveal>
+          <div>
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-background/50 font-button">
+              <span className="text-background/30">03</span>
+              <span className="h-px w-8 bg-background/20" />
+              <span>Capabilities</span>
+            </div>
+            <h2 className="mt-6 font-display text-4xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-[-0.03em] font-medium max-w-2xl">
+              Everything you need. <br />
+              <span className="italic font-normal text-background/60">Nothing you don't.</span>
+            </h2>
+          </div>
+        </Reveal>
+        <Reveal delay={0.1}>
+          <p className="text-sm leading-relaxed text-background/60 max-w-xs">
+            A curated toolkit mastered for production. Depth over breadth.
+          </p>
+        </Reveal>
       </div>
 
-      <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden z-20">
-        {SKILLS.map((skill, i) => {
-          const Icon = skill.icon;
-          return (
-            <div
-              key={skill.name}
-              ref={(el) => {
-                pillRefs.current[i] = el;
-              }}
-              className="absolute top-0 left-0 flex items-center gap-3 px-6 py-4 bg-background/5 backdrop-blur-md text-background rounded-full border border-background/20 shadow-2xl cursor-grab active:cursor-grabbing hover:bg-background/10 transition-colors duration-300"
-              style={{ willChange: 'transform' }}
-            >
-              <Icon className="h-6 w-6 text-accent" />
-              <span className="font-display text-2xl font-medium whitespace-nowrap">{skill.name}</span>
-            </div>
-          );
-        })}
+      {/* Marquee Bands */}
+      <div className="relative flex flex-col gap-6 sm:gap-10 -rotate-3 scale-110 pointer-events-auto cursor-default">
+        
+        {/* Row 1 */}
+        <div className="group/row flex w-max marquee hover:[animation-play-state:paused]">
+          {repeat(row1, 8).map((s, i) => {
+            const Icon = s.icon;
+            const isMobileHighlighted = i % 3 === 0;
+            return (
+              <span key={i} className={`group/item flex items-center gap-6 mx-6 font-display text-6xl sm:text-[8rem] lg:text-[10rem] leading-none uppercase tracking-tighter transition-colors duration-500 hover:text-accent active:text-accent ${isMobileHighlighted ? 'text-accent lg:text-transparent' : 'text-transparent'}`} style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                {s.name}
+                <Icon className="h-10 w-10 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-accent ml-6" style={{ strokeWidth: 1.5 }} />
+              </span>
+            );
+          })}
+        </div>
+
+        {/* Row 2 (Reverse) */}
+        <div className="group/row flex w-max marquee hover:[animation-play-state:paused]" style={{ animationDirection: "reverse", animationDuration: "45s" }}>
+          {repeat(row2, 8).map((s, i) => {
+            const Icon = s.icon;
+            const isMobileHighlighted = i % 3 === 1;
+            return (
+              <span key={i} className={`group/item flex items-center gap-6 mx-6 font-display text-6xl sm:text-[8rem] lg:text-[10rem] leading-none uppercase tracking-tighter transition-colors duration-500 hover:text-accent active:text-accent ${isMobileHighlighted ? 'text-accent lg:text-transparent' : 'text-transparent'}`} style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                <Icon className="h-10 w-10 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-accent mr-6" style={{ strokeWidth: 1.5 }} />
+                {s.name}
+              </span>
+            );
+          })}
+        </div>
+
+        {/* Row 3 */}
+        <div className="group/row flex w-max marquee hover:[animation-play-state:paused]">
+          {repeat(row3, 8).map((s, i) => {
+            const Icon = s.icon;
+            const isMobileHighlighted = i % 3 === 2;
+            return (
+              <span key={i} className={`group/item flex items-center gap-6 mx-6 font-display text-6xl sm:text-[8rem] lg:text-[10rem] leading-none uppercase tracking-tighter transition-colors duration-500 hover:text-accent active:text-accent ${isMobileHighlighted ? 'text-accent lg:text-transparent' : 'text-transparent'}`} style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                {s.name}
+                <Icon className="h-10 w-10 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-accent ml-6" style={{ strokeWidth: 1.5 }} />
+              </span>
+            );
+          })}
+        </div>
+
       </div>
     </section>
   );
