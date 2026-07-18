@@ -170,11 +170,6 @@ const PROCESS = [
   { icon: Rocket, title: "Launch", desc: "Perf tuning, QA, ship, iterate." },
 ];
 
-const STACK = [
-  "React", "Next.js", "TypeScript", "Tailwind", "SCSS", "GSAP",
-  "Lenis", "Framer Motion", "Three.js", "WordPress", "ACF", "Vue",
-  "Vuex", "Vuetify", "Figma", "Git", "PWA", "AI-Assisted",
-];
 
 const STATS = [
   { n: 2, suffix: "+", label: "Years Experience" },
@@ -244,7 +239,7 @@ const SECTION_IDS = ["about", "work", "experience", "playground", "contact"];
 
 /* Brand logo, a clean monogram tile: a crisp "K" in a rounded dark tile with an
    accent status dot that breaks out of the corner and pulses. Magnetic, with a
-   subtle tilt on hover. */
+/* Brand logo: a clean monogram tile with a crisp "K" in a rounded dark tile and an accent status dot that breaks out of the corner and pulses. Magnetic, with a subtle tilt on hover. */
 function Logo() {
   const ref = useRef<HTMLAnchorElement>(null);
   const [p, setP] = useState({ x: 0, y: 0 });
@@ -254,8 +249,8 @@ function Logo() {
     if (!el) return;
     const r = el.getBoundingClientRect();
     setP({
-      x: (e.clientX - r.left - r.width / 2) * 0.18,
-      y: (e.clientY - r.top - r.height / 2) * 0.18,
+      x: (e.clientX - r.left - r.width / 2) * 0.15,
+      y: (e.clientY - r.top - r.height / 2) * 0.15,
     });
   };
 
@@ -266,20 +261,31 @@ function Logo() {
       onMouseMove={onMove}
       onMouseLeave={() => setP({ x: 0, y: 0 })}
       animate={{ x: p.x, y: p.y }}
-      transition={{ type: "spring", stiffness: 250, damping: 18 }}
-      className="group flex shrink-0 items-center rounded-full px-1.5 py-1 pl-3"
-      aria-label="Kavan Gami · UI Developer, back to top"
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="group flex items-center gap-3 shrink-0 rounded-xl"
+      aria-label="Kavan Gami · Back to top"
     >
-      <span className="flex flex-col leading-none">
-        <span className="kg-shimmer relative font-display text-base font-semibold tracking-tight sm:text-[17px]">
-          Kavan <span className="italic font-normal">Gami</span>
-          <span className="kg-underline absolute -bottom-1 left-0 h-px w-full bg-accent" />
+      {/* Monogram Tile */}
+      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-foreground text-background transition-transform duration-500 group-hover:scale-[1.05] group-hover:rotate-6 shadow-sm">
+        <span className="font-display text-xl font-medium leading-none tracking-tighter ml-[-1px]">
+          K<span className="text-accent italic font-normal">g</span>
         </span>
-        <span className="mt-1.5 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] text-muted-foreground font-button">
-          <span className="h-1 w-1 rounded-full bg-accent" />
+        
+        {/* Pulsing status dot */}
+        <span className="absolute -right-1 -top-1 flex h-3 w-3 items-center justify-center rounded-full border-[2.5px] border-background bg-accent transition-transform duration-500 group-hover:scale-125">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
+        </span>
+      </div>
+
+      {/* Stacked Typography */}
+      <div className="hidden sm:flex flex-col justify-center overflow-hidden leading-tight">
+        <span className="font-display text-[15px] font-semibold tracking-tight text-foreground transition-colors duration-300">
+          Kavan Gami
+        </span>
+        <span className="text-[9px] uppercase tracking-[0.25em] text-muted-foreground font-button transition-colors duration-300 group-hover:text-accent">
           UI Developer
         </span>
-      </span>
+      </div>
     </motion.a>
   );
 }
@@ -790,131 +796,180 @@ function About() {
   );
 }
 
-function SkillCard({ skill, i }: { readonly skill: (typeof SKILLS)[number]; readonly i: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [8, -8]), {
-    stiffness: 150,
-    damping: 15,
+/* ---- Skill category grouping helper ---- */
+const SKILL_CATEGORIES = (() => {
+  const map = new Map<string, typeof SKILLS>();
+  SKILLS.forEach((s) => {
+    if (!map.has(s.cat)) map.set(s.cat, []);
+    map.get(s.cat)!.push(s);
   });
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-8, 8]), {
-    stiffness: 150,
-    damping: 15,
-  });
-  const [glow, setGlow] = useState({ x: 50, y: 50 });
+  return Array.from(map, ([cat, items]) => ({ cat, items }));
+})();
+
+function SkillRow({
+  skill,
+  i,
+}: {
+  readonly skill: (typeof SKILLS)[number];
+  readonly i: number;
+}) {
   const Icon = skill.icon;
 
-  const onMove = (e: React.MouseEvent) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    mx.set(px - 0.5);
-    my.set(py - 0.5);
-    setGlow({ x: px * 100, y: py * 100 });
-  };
-  const reset = () => {
-    mx.set(0);
-    my.set(0);
-  };
-
   return (
-    <div className="skill-card" style={{ perspective: 1000 }}>
-      <motion.div
-        ref={ref}
-        onMouseMove={onMove}
-        onMouseLeave={reset}
-        style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-        className="group relative h-48 overflow-hidden rounded-3xl border border-border bg-card p-6 transition-shadow duration-300 hover:shadow-[0_30px_60px_-30px_rgba(0,0,0,0.25)]"
-      >
-        {/* cursor spotlight */}
-        <div
-          className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{
-            background: `radial-gradient(240px circle at ${glow.x}% ${glow.y}%, rgba(79,124,255,0.20), transparent 65%)`,
-          }}
-        />
-        {/* top accent line on hover */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-        {/* accent border on hover */}
-        <div className="pointer-events-none absolute inset-0 rounded-3xl border border-accent/0 transition-colors duration-300 group-hover:border-accent/40" />
+    <motion.div
+      className="skill-row group relative"
+      whileHover={{ x: 6 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+    >
+      <div className="flex items-center gap-4 py-4 sm:py-5 border-b border-foreground/[0.06] transition-colors duration-300 group-hover:border-accent/30">
+        {/* number */}
+        <span className="hidden sm:block w-8 text-right font-display text-sm text-foreground/15 transition-colors duration-300 group-hover:text-accent/50">
+          {String(i + 1).padStart(2, "0")}
+        </span>
 
-        <div
-          className="relative flex h-full flex-col justify-between"
-          style={{ transform: "translateZ(45px)" }}
-        >
-          <div className="flex items-start justify-between">
-            <span className="grid h-12 w-12 place-items-center rounded-2xl bg-secondary-bg text-foreground transition-all duration-300 group-hover:-rotate-6 group-hover:bg-foreground group-hover:text-background">
-              <Icon className="h-5 w-5" />
-            </span>
-            <span className="font-display text-2xl text-foreground/10 transition-colors duration-300 group-hover:text-accent/40">
-              {String(i + 1).padStart(2, "0")}
-            </span>
-          </div>
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground font-button">
-              {skill.cat}
-            </p>
-            <div className="mt-1.5 flex items-center justify-between">
-              <h3 className="font-display text-xl tracking-tight">{skill.name}</h3>
-              <ArrowUpRight className="h-4 w-4 -translate-x-2 text-accent opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" />
-            </div>
-            <span className="mt-3 block h-0.5 w-8 rounded-full bg-accent/40 transition-all duration-500 ease-out group-hover:w-full group-hover:bg-accent" />
-          </div>
-        </div>
-      </motion.div>
-    </div>
+        {/* icon */}
+        <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-card border border-border transition-all duration-400 group-hover:bg-foreground group-hover:border-foreground group-hover:text-background group-hover:rotate-[-8deg] group-hover:scale-110">
+          <Icon className="h-[18px] w-[18px]" />
+          {/* glow ring */}
+          <span className="pointer-events-none absolute inset-0 rounded-xl ring-0 ring-accent/0 transition-all duration-400 group-hover:ring-[6px] group-hover:ring-accent/10" />
+        </span>
+
+        {/* name */}
+        <h3 className="font-display text-lg sm:text-xl tracking-tight transition-colors duration-300">
+          {skill.name}
+        </h3>
+
+        {/* spacer */}
+        <span className="flex-1" />
+
+        {/* animated line */}
+        <span className="hidden sm:block relative h-px flex-[0_0_120px] lg:flex-[0_0_180px] bg-foreground/[0.06] overflow-hidden rounded-full">
+          <motion.span
+            className="absolute inset-y-0 left-0 rounded-full bg-accent"
+            initial={{ width: 0 }}
+            whileInView={{ width: "100%" }}
+            viewport={{ once: true }}
+            transition={{ duration: 1.2, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+          />
+        </span>
+
+        {/* arrow */}
+        <span className="grid h-8 w-8 place-items-center rounded-full bg-transparent transition-all duration-300 group-hover:bg-accent/10">
+          <ArrowUpRight className="h-3.5 w-3.5 text-foreground/20 transition-all duration-300 group-hover:text-accent group-hover:rotate-45" />
+        </span>
+      </div>
+    </motion.div>
   );
 }
 
 function Skills() {
   const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!ref.current) return;
     const ctx = gsap.context(() => {
       gsap.registerPlugin(ScrollTrigger);
-      gsap.from(".skill-card", {
-        y: 64,
+      // animate category blocks
+      gsap.from(".skill-category", {
+        y: 50,
         opacity: 0,
-        scale: 0.94,
-        duration: 0.85,
+        duration: 0.9,
         ease: "power3.out",
-        stagger: { each: 0.07, grid: [3, 4], from: "start" },
-        scrollTrigger: { trigger: ".skills-grid", start: "top 80%" },
+        stagger: 0.15,
+        scrollTrigger: { trigger: ".skills-container", start: "top 80%" },
+      });
+      // animate individual rows
+      gsap.from(".skill-row", {
+        x: -30,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+        stagger: 0.04,
+        scrollTrigger: { trigger: ".skills-container", start: "top 75%" },
       });
     }, ref);
     return () => ctx.revert();
   }, []);
 
+  /* counter animation */
+  const totalSkills = SKILLS.length;
+  const totalCats = SKILL_CATEGORIES.length;
+
   return (
     <section
       id="skills"
       ref={ref}
-      className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg"
+      className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg overflow-hidden"
     >
-      <div className="mx-auto max-w-7xl">
+      {/* subtle background decoration */}
+      <div className="pointer-events-none absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-accent/[0.03] blur-[120px]" />
+      <div className="pointer-events-none absolute -left-20 bottom-40 h-[300px] w-[300px] rounded-full bg-accent/[0.02] blur-[100px]" />
+
+      <div className="mx-auto max-w-7xl" ref={containerRef}>
+        {/* header */}
         <Reveal><SectionLabel n="03" label="Skills" /></Reveal>
-        <div className="mt-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div className="mt-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           <Reveal>
             <h2 className="font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium max-w-3xl">
-              A curated toolkit, not a laundry list.
+              A curated toolkit,{" "}
+              <span className="italic font-normal text-foreground/70">not a laundry list.</span>
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="max-w-sm text-muted-foreground">
-              Every tool below is used on shipped, in-production work. Deep, not
-              wide.
-            </p>
+            <div className="flex items-center gap-8">
+              <div className="text-center">
+                <p className="font-display text-4xl sm:text-5xl font-medium text-accent">{totalSkills}</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-button">
+                  Technologies
+                </p>
+              </div>
+              <span className="h-12 w-px bg-foreground/10" />
+              <div className="text-center">
+                <p className="font-display text-4xl sm:text-5xl font-medium">{totalCats}</p>
+                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-button">
+                  Domains
+                </p>
+              </div>
+            </div>
           </Reveal>
         </div>
 
-        <div className="skills-grid mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {SKILLS.map((s, i) => (
-            <SkillCard key={s.name} skill={s} i={i} />
+        {/* skill rows grouped by category */}
+        <div className="skills-container mt-16 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-14">
+          {SKILL_CATEGORIES.map(({ cat, items }) => (
+            <div key={cat} className="skill-category">
+              {/* category header */}
+              <div className="flex items-center gap-3 mb-2">
+                <span className="h-2 w-2 rounded-full bg-accent" />
+                <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground font-button">
+                  {cat}
+                </p>
+                <span className="flex-1 h-px bg-foreground/[0.06]" />
+                <span className="text-[11px] text-foreground/25 font-button">
+                  {String(items.length).padStart(2, "0")}
+                </span>
+              </div>
+
+              {/* skill rows */}
+              {items.map((s) => {
+                const globalIndex = SKILLS.findIndex((sk) => sk.name === s.name);
+                return <SkillRow key={s.name} skill={s} i={globalIndex} />;
+              })}
+            </div>
           ))}
         </div>
+
+        {/* bottom tagline */}
+        <Reveal delay={0.2}>
+          <div className="mt-20 flex items-center justify-center gap-4">
+            <span className="h-px flex-1 max-w-[120px] bg-foreground/[0.08]" />
+            <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground/70 font-button text-center">
+              Every tool ships in production — deep, not wide
+            </p>
+            <span className="h-px flex-1 max-w-[120px] bg-foreground/[0.08]" />
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -1000,9 +1055,46 @@ function Work() {
 }
 
 function Experience() {
+  const ref = useRef<HTMLDivElement>(null);
+  const CARD_TOP_START = 100; // px from top of viewport for first card
+  const CARD_TOP_STEP = 30; // each next card offsets by this much more
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const ctx = gsap.context(() => {
+      gsap.registerPlugin(ScrollTrigger);
+      // subtle scale-down for stacked cards as they go behind
+      gsap.utils.toArray<HTMLElement>(".exp-sticky-card").forEach((card, i, arr) => {
+        if (i === arr.length - 1) return; // last card doesn't need it
+        ScrollTrigger.create({
+          trigger: arr[i + 1],
+          start: "top bottom",
+          end: "top center",
+          scrub: true,
+          onUpdate: (self) => {
+            const scale = 1 - self.progress * 0.03;
+            const brightness = 1 - self.progress * 0.08;
+            card.style.transform = `scale(${scale})`;
+            card.style.filter = `brightness(${brightness})`;
+          },
+          onLeaveBack: () => {
+            card.style.transform = "scale(1)";
+            card.style.filter = "brightness(1)";
+          },
+        });
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="experience" className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
-      <div className="mx-auto max-w-6xl">
+    <section
+      id="experience"
+      ref={ref}
+      className="relative px-6 sm:px-10 lg:px-16 bg-secondary-bg"
+    >
+      {/* header — not sticky */}
+      <div className="mx-auto max-w-6xl pt-28 sm:pt-40 pb-16">
         <Reveal><SectionLabel n="05" label="Experience" /></Reveal>
         <Reveal>
           <h2 className="mt-6 font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium max-w-3xl">
@@ -1011,84 +1103,176 @@ function Experience() {
             so far, built on real production work.
           </h2>
         </Reveal>
+      </div>
 
-        <div className="mt-20 relative">
-          <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-foreground/10 md:-translate-x-1/2" />
-          <div className="space-y-16">
-            {EXPERIENCE.map((e, i) => (
-              <Reveal key={e.company} delay={i * 0.1}>
-                <div className={`relative md:grid md:grid-cols-2 md:gap-16 ${i % 2 ? "md:direction-rtl" : ""}`}>
-                  <div className={`pl-12 md:pl-0 ${i % 2 ? "md:col-start-2" : ""}`}>
-                    <div className="absolute left-4 md:left-1/2 top-2 h-3 w-3 rounded-full bg-accent md:-translate-x-1/2 ring-4 ring-secondary-bg" />
-                    <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-button">
-                      {e.period}
-                    </p>
-                    <h3 className="mt-3 font-display text-2xl sm:text-3xl">
-                      {e.role}
-                    </h3>
-                    <p className="mt-1 text-muted-foreground">
-                      {e.company} · {e.place}
-                    </p>
-                    <ul className="mt-5 space-y-2 text-sm text-foreground/80">
-                      {e.points.map((pt) => (
-                        <li key={pt} className="flex gap-3">
-                          <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-foreground/50" />
-                          <span>{pt}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+      {/* stacking cards */}
+      <div className="mx-auto max-w-6xl pb-28 sm:pb-40">
+        {EXPERIENCE.map((e, i) => {
+          const isPresent = e.period.includes("Present");
+          const topOffset = CARD_TOP_START + i * CARD_TOP_STEP;
+
+          return (
+            <div
+              key={e.company}
+              className="exp-sticky-card sticky rounded-2xl border border-border bg-card shadow-[0_-1px_0_0_rgba(0,0,0,0.02)] mb-6 last:mb-0 origin-top transition-[transform,filter] duration-300 will-change-transform"
+              style={{ top: topOffset, zIndex: i + 1 }}
+            >
+              <div className="p-8 sm:p-10 lg:p-12 grid grid-cols-1 lg:grid-cols-[200px_1fr] gap-6 lg:gap-16">
+                {/* left: period */}
+                <div className="flex items-baseline gap-3 lg:flex-col lg:gap-2">
+                  <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground font-button whitespace-nowrap">
+                    {e.period}
+                  </p>
+                  {isPresent && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+                      <span className="text-[10px] uppercase tracking-[0.2em] text-accent font-button">
+                        Now
+                      </span>
+                    </span>
+                  )}
                 </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
+
+                {/* right: content */}
+                <div>
+                  <h3 className="font-display text-2xl sm:text-[2rem] leading-tight tracking-tight">
+                    {e.role}
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {e.company}, {e.place}
+                  </p>
+
+                  <ul className="mt-6 space-y-3">
+                    {e.points.map((pt) => (
+                      <li key={pt} className="flex gap-3 text-sm leading-relaxed text-foreground/70">
+                        <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-foreground/25" />
+                        {pt}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
 }
 
 function Services() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [hovered, setHovered] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const ctx = gsap.context(() => {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.from(".svc-row", {
+        y: 30,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+        stagger: 0.08,
+        scrollTrigger: { trigger: ".svc-list", start: "top 80%" },
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="services" className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
+    <section id="services" ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
       <div className="mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-end">
-          <Reveal className="lg:col-span-8">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-20">
+          <Reveal>
             <SectionLabel n="06" label="Services" />
             <h2 className="mt-6 font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium">
-              What I do, end to end.
+              What I do,{" "}
+              <span className="italic font-normal text-foreground/70">end to end.</span>
             </h2>
           </Reveal>
-          <Reveal delay={0.1} className="lg:col-span-4">
-            <p className="text-muted-foreground">
+          <Reveal delay={0.1}>
+            <p className="max-w-sm text-muted-foreground">
               I handle the entire frontend layer, from tokens and components to
               motion and performance.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SERVICES.map((s, i) => (
-            <Reveal key={s.title} delay={i * 0.05}>
-              <motion.div
-                whileHover={{ y: -4 }}
-                className="group h-full rounded-3xl bg-card border border-border p-8"
+        {/* full-width service rows */}
+        <div className="svc-list">
+          {/* top rule */}
+          <div className="h-px bg-foreground/10" />
+
+          {SERVICES.map((s, i) => {
+            const Icon = s.icon;
+            const isHovered = hovered === i;
+
+            return (
+              <div
+                key={s.title}
+                className="svc-row group cursor-default"
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
               >
-                <div className="flex items-center justify-between">
-                  <div className="grid h-11 w-11 place-items-center rounded-xl bg-secondary-bg">
-                    <s.icon className="h-5 w-5" />
-                  </div>
-                  <span className="text-xs text-muted-foreground font-button">
+                <div className="relative py-7 sm:py-9 flex items-center gap-6 sm:gap-10">
+                  {/* number */}
+                  <span className="hidden sm:block w-10 text-sm text-foreground/20 font-display transition-colors duration-300 group-hover:text-accent">
                     {String(i + 1).padStart(2, "0")}
                   </span>
+
+                  {/* icon — slides in on hover */}
+                  <motion.span
+                    className="hidden md:grid h-12 w-12 shrink-0 place-items-center"
+                    animate={{
+                      opacity: isHovered ? 1 : 0,
+                      x: isHovered ? 0 : -12,
+                      rotate: isHovered ? 0 : -20,
+                    }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Icon className="h-5 w-5 text-accent" />
+                  </motion.span>
+
+                  {/* title — shifts right on hover */}
+                  <motion.h3
+                    className="font-display text-2xl sm:text-3xl lg:text-[2.6rem] tracking-tight leading-none"
+                    animate={{ x: isHovered ? 8 : 0 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {s.title}
+                  </motion.h3>
+
+                  {/* spacer */}
+                  <span className="flex-1" />
+
+                  {/* description — reveals on hover */}
+                  <motion.p
+                    className="hidden lg:block max-w-xs text-sm leading-relaxed text-muted-foreground text-right"
+                    animate={{
+                      opacity: isHovered ? 1 : 0,
+                      x: isHovered ? 0 : 20,
+                    }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    {s.desc}
+                  </motion.p>
+
+                  {/* arrow — always visible but rotates on hover */}
+                  <motion.span
+                    className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-foreground/10 transition-colors duration-300 group-hover:border-accent/40 group-hover:bg-accent/[0.06]"
+                    animate={{ rotate: isHovered ? 45 : 0 }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <ArrowUpRight className="h-4 w-4 text-foreground/30 transition-colors duration-300 group-hover:text-accent" />
+                  </motion.span>
                 </div>
-                <h3 className="mt-8 font-display text-2xl">{s.title}</h3>
-                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                  {s.desc}
-                </p>
-              </motion.div>
-            </Reveal>
-          ))}
+
+                {/* bottom rule — transitions to accent on hover */}
+                <div className="h-px bg-foreground/10 transition-colors duration-500 group-hover:bg-accent/40" />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1096,72 +1280,73 @@ function Services() {
 }
 
 function Process() {
-  return (
-    <section className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
-      <div className="mx-auto max-w-7xl">
-        <div className="flex items-end justify-between gap-6">
-          <Reveal>
-            <div>
-              <SectionLabel n="07" label="Creative Process" />
-              <h2 className="mt-6 font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium">
-                Six steps from
-                <span className="italic font-normal text-foreground/70"> idea </span>
-                to launch.
-              </h2>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <img src={charRobot} alt="" className="hidden md:block w-40 rounded-2xl float-soft" loading="lazy" />
-          </Reveal>
-        </div>
+  const ref = useRef<HTMLDivElement>(null);
 
-        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {PROCESS.map((p, i) => (
-            <Reveal key={p.title} delay={i * 0.05}>
-              <div className="rounded-3xl bg-card border border-border p-8 h-full">
-                <div className="flex items-baseline justify-between">
-                  <span className="font-display text-5xl text-foreground/15">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <p.icon className="h-5 w-5 text-accent" />
-                </div>
-                <h3 className="mt-6 font-display text-2xl">{p.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{p.desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
+  useEffect(() => {
+    if (!ref.current) return;
+    const ctx = gsap.context(() => {
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.from(".proc-step", {
+        y: 40,
+        opacity: 0,
+        duration: 0.9,
+        ease: "power3.out",
+        stagger: 0.1,
+        scrollTrigger: { trigger: ".proc-grid", start: "top 80%" },
+      });
+    }, ref);
+    return () => ctx.revert();
+  }, []);
 
-function Stack() {
   return (
-    <section className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
+    <section ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
       <div className="mx-auto max-w-7xl">
-        <Reveal><SectionLabel n="08" label="Tech Stack" /></Reveal>
         <Reveal>
-          <h2 className="mt-6 font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium max-w-3xl">
-            Tools I reach for on a Monday morning.
+          <SectionLabel n="07" label="Creative Process" />
+          <h2 className="mt-6 font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium">
+            Six steps from
+            <span className="italic font-normal text-foreground/70"> idea </span>
+            to launch.
           </h2>
         </Reveal>
-        <div className="mt-16 flex flex-wrap gap-3">
-          {STACK.map((t, i) => (
-            <Reveal key={t} delay={i * 0.02}>
-              <motion.div
-                whileHover={{ y: -3, backgroundColor: "#161616", color: "#F7F4EF" }}
-                className="rounded-full border border-border bg-card px-5 py-3 font-button text-sm cursor-default"
-              >
-                {t}
-              </motion.div>
-            </Reveal>
-          ))}
+
+        <div className="proc-grid mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-0">
+          {PROCESS.map((p, i) => {
+            const Icon = p.icon;
+            return (
+              <div key={p.title} className="proc-step group relative">
+                {/* integrated connector — dot + line inside each cell */}
+
+
+                {/* content — padded inside each cell */}
+                <div className="lg:pr-8 py-8 sm:py-6 lg:py-0 border-b border-foreground/[0.06] sm:border-b lg:border-b-0">
+                  {/* number */}
+                  <span className="font-display text-4xl font-medium leading-none text-foreground/[0.07] transition-colors duration-500 group-hover:text-accent/25">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+
+                  {/* title + icon */}
+                  <div className="mt-5 flex items-center gap-2.5">
+                    <Icon className="h-4 w-4 text-foreground/25 transition-colors duration-400 group-hover:text-accent" />
+                    <h3 className="font-display text-lg tracking-tight">
+                      {p.title}
+                    </h3>
+                  </div>
+
+                  {/* description */}
+                  <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground lg:pr-2">
+                    {p.desc}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
   );
 }
+
 
 function Achievements() {
   const ref = useRef<HTMLDivElement>(null);
@@ -1482,7 +1667,6 @@ function Portfolio() {
       <Experience />
       <Services />
       <Process />
-      <Stack />
       <Achievements />
       <Playground />
       <Contact />
