@@ -121,6 +121,34 @@
   animation: breathe 4s ease-in-out infinite;
 }
 
+/* Brand logo — draw-in + hover */
+.kg-svg {
+  overflow: visible;
+}
+.kg-glyph {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .kg-glyph {
+  transform: rotate(-8deg) scale(1.05);
+}
+.kg-orbit {
+  stroke-opacity: 0.9;
+  transition: stroke-opacity 0.4s ease;
+}
+.group:hover .kg-orbit {
+  stroke-opacity: 1;
+}
+.kg-underline {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.group:hover .kg-underline {
+  transform: scaleX(1);
+}
+
 /* Lenis */
 html.lenis,
 html.lenis body {

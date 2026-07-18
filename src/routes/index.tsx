@@ -47,7 +47,6 @@ import charDesigner from "@/assets/char-designer.jpg";
 import charMascot from "@/assets/char-mascot.jpg";
 import charWave from "@/assets/char-wave.jpg";
 import { useLenis } from "@/hooks/use-lenis";
-import { Preloader } from "@/components/preloader";
 
 export const Route = createFileRoute("/")({
   component: Portfolio,
@@ -242,8 +241,10 @@ function SectionLabel({ n, label }: { n: string; label: string }) {
 
 const SECTION_IDS = ["about", "work", "experience", "playground", "contact"];
 
-/* Animated brand logo — a fixed "k" mark inside a GSAP-spun dashed accent ring,
-   paired with a two-line wordmark. Magnetic + tilts on hover. */
+/* Out-of-the-box animated brand logo — a geometric "K" monogram whose top arm
+   escapes a rounded box. GSAP draws the box + strokes in, an accent segment
+   orbits the frame, a glowing spark "breaks out", the whole mark floats, and it
+   springs magnetically toward the cursor on hover. */
 function Logo() {
   const ref = useRef<HTMLAnchorElement>(null);
   const [p, setP] = useState({ x: 0, y: 0 });
@@ -251,12 +252,62 @@ function Logo() {
   useEffect(() => {
     if (!ref.current) return;
     const ctx = gsap.context(() => {
-      gsap.to(".logo-ring", {
-        rotate: 360,
+      const reduced = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      gsap.set([".kg-box", ".kg-stroke"], {
+        strokeDasharray: 1,
+        strokeDashoffset: 1,
+      });
+      gsap.set(".kg-orbit", {
+        strokeDasharray: "0.14 0.86",
+        strokeDashoffset: 0,
+      });
+      gsap.set([".kg-dot", ".kg-halo"], {
+        scale: 0,
         transformOrigin: "50% 50%",
-        duration: 14,
+      });
+
+      if (reduced) {
+        gsap.set([".kg-box", ".kg-stroke"], { strokeDashoffset: 0 });
+        gsap.set([".kg-dot", ".kg-halo"], { scale: 1 });
+        return;
+      }
+
+      const tl = gsap.timeline({ defaults: { ease: "power2.out" } });
+      tl.to(".kg-box", { strokeDashoffset: 0, duration: 0.7 })
+        .to(
+          ".kg-stroke",
+          { strokeDashoffset: 0, duration: 0.5, stagger: 0.1 },
+          "-=0.35",
+        )
+        .to(".kg-dot", { scale: 1, duration: 0.5, ease: "back.out(3)" }, "-=0.1")
+        .to(".kg-halo", { scale: 1, duration: 0.5 }, "<");
+
+      // ambient life
+      gsap.to(".kg-orbit", {
+        strokeDashoffset: -1,
+        duration: 5,
         repeat: -1,
         ease: "none",
+        delay: 0.8,
+      });
+      gsap.to(".kg-svg", {
+        y: -1.5,
+        duration: 2.4,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+      });
+      gsap.to(".kg-halo", {
+        scale: 1.35,
+        opacity: 0.08,
+        duration: 1.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut",
+        delay: 1.2,
       });
     }, ref);
     return () => ctx.revert();
@@ -267,8 +318,8 @@ function Logo() {
     if (!el) return;
     const r = el.getBoundingClientRect();
     setP({
-      x: (e.clientX - r.left - r.width / 2) * 0.15,
-      y: (e.clientY - r.top - r.height / 2) * 0.15,
+      x: (e.clientX - r.left - r.width / 2) * 0.18,
+      y: (e.clientY - r.top - r.height / 2) * 0.18,
     });
   };
 
@@ -280,34 +331,115 @@ function Logo() {
       onMouseLeave={() => setP({ x: 0, y: 0 })}
       animate={{ x: p.x, y: p.y }}
       transition={{ type: "spring", stiffness: 250, damping: 18 }}
-      className="group flex shrink-0 items-center gap-2.5 rounded-full py-1 pl-1 pr-2"
+      className="group flex shrink-0 items-center gap-2.5 rounded-full py-1 pl-1 pr-1.5"
+      aria-label="Kavan Gami — UI Developer, back to top"
     >
-      <span className="relative grid h-9 w-9 place-items-center">
+      <span className="relative grid h-10 w-10 shrink-0 place-items-center">
         <svg
-          viewBox="0 0 40 40"
-          className="logo-ring absolute inset-0 h-full w-full text-accent"
+          className="kg-svg absolute inset-0 h-full w-full text-foreground"
+          viewBox="0 0 48 48"
+          fill="none"
           aria-hidden="true"
         >
+          {/* glowing "escape" halo */}
           <circle
-            cx="20"
-            cy="20"
-            r="18"
-            fill="none"
+            className="kg-halo"
+            cx="41"
+            cy="11"
+            r="6"
+            fill="var(--accent)"
+            opacity="0.14"
+            style={{ transformBox: "fill-box", transformOrigin: "center" }}
+          />
+          {/* the box */}
+          <rect
+            className="kg-box"
+            x="6"
+            y="10"
+            width="30"
+            height="30"
+            rx="9"
+            pathLength={1}
             stroke="currentColor"
-            strokeWidth="1.5"
-            strokeDasharray="3 6"
+            strokeWidth="2"
             strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+          />
+          {/* accent segment orbiting the box */}
+          <rect
+            className="kg-orbit"
+            x="6"
+            y="10"
+            width="30"
+            height="30"
+            rx="9"
+            pathLength={1}
+            stroke="var(--accent)"
+            strokeWidth="2.25"
+            strokeLinecap="round"
+            fill="none"
+          />
+          {/* the K — its top arm breaks out of the box */}
+          <g className="kg-glyph">
+            <line
+              className="kg-stroke"
+              x1="16"
+              y1="16"
+              x2="16"
+              y2="34"
+              pathLength={1}
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+            />
+            <line
+              className="kg-stroke"
+              x1="16"
+              y1="25"
+              x2="39"
+              y2="12"
+              pathLength={1}
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+            />
+            <line
+              className="kg-stroke"
+              x1="16"
+              y1="25"
+              x2="33"
+              y2="34"
+              pathLength={1}
+              stroke="currentColor"
+              strokeWidth="3"
+              strokeLinecap="round"
+              style={{ strokeDasharray: 1, strokeDashoffset: 1 }}
+            />
+          </g>
+          {/* the escaped spark */}
+          <circle
+            className="kg-dot"
+            cx="41"
+            cy="11"
+            r="3"
+            fill="var(--accent)"
+            style={{
+              transformBox: "fill-box",
+              transformOrigin: "center",
+              transform: "scale(0)",
+            }}
           />
         </svg>
-        <span className="grid h-7 w-7 place-items-center rounded-full bg-foreground font-display text-sm font-semibold text-background transition-transform duration-500 group-hover:-rotate-12">
-          k
-        </span>
       </span>
       <span className="hidden flex-col leading-none sm:flex">
-        <span className="font-display text-[15px] font-medium tracking-tight text-foreground">
+        <span className="relative font-display text-[15px] font-medium tracking-tight text-foreground">
           Kavan <span className="italic font-normal">Gami</span>
+          <span className="kg-underline absolute -bottom-1 left-0 h-px w-full bg-accent" />
         </span>
-        <span className="mt-1 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] text-muted-foreground font-button">
+        <span className="mt-1.5 flex items-center gap-1.5 text-[9px] uppercase tracking-[0.28em] text-muted-foreground font-button">
           <span className="h-1 w-1 rounded-full bg-accent" />
           UI Developer
         </span>
@@ -1305,7 +1437,6 @@ function Portfolio() {
   useLenis();
   return (
     <main className="relative bg-background text-foreground">
-      <Preloader />
       <Nav />
       <Hero />
       <Marquee />
