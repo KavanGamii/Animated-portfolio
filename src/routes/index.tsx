@@ -52,11 +52,11 @@ export const Route = createFileRoute("/")({
   component: Portfolio,
   head: () => ({
     meta: [
-      { title: "Kavan Gami — UI Developer & Web Designer" },
+      { title: "Kavan Gami · UI Developer & Web Designer" },
       {
         name: "description",
         content:
-          "Kavan Gami — UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress.",
+          "Kavan Gami · UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress.",
       },
     ],
   }),
@@ -93,7 +93,7 @@ const PROJECTS = [
     name: "SuperMia",
     tag: "AI Agent Platform",
     stack: "React · Tailwind",
-    desc: "Scalable, component-based UI for an enterprise AI automation platform — dynamic components tuned for complex workflow states and production performance.",
+    desc: "Scalable, component-based UI for an enterprise AI automation platform, dynamic components tuned for complex workflow states and production performance.",
     href: "https://mia.supermia.ai/",
     accent: "#4F7CFF",
   },
@@ -102,7 +102,7 @@ const PROJECTS = [
     name: "Pioneer Group",
     tag: "UK Government Platform",
     stack: "HTML · Bootstrap · GSAP · Lenis",
-    desc: "Accessibility-focused public-sector web platform with GSAP scroll animations and Lenis smooth scrolling — built to strict cross-browser and gov design standards.",
+    desc: "Accessibility-focused public-sector web platform with GSAP scroll animations and Lenis smooth scrolling, built to strict cross-browser and gov design standards.",
     href: "https://pioneergroup.org.uk",
     accent: "#161616",
   },
@@ -111,7 +111,7 @@ const PROJECTS = [
     name: "Local Lens",
     tag: "Hyperlocal Discovery App",
     stack: "Next.js · Tailwind",
-    desc: "Full personal product shipped end-to-end — a mobile-first, performance-optimized UI with location-based UX and fast load times.",
+    desc: "Full personal product shipped end-to-end: a mobile-first, performance-optimized UI with location-based UX and fast load times.",
     href: "https://local-lenss.vercel.app",
     accent: "#4F7CFF",
   },
@@ -131,18 +131,18 @@ const EXPERIENCE = [
     role: "Web Designer & UI Developer",
     company: "Softqube Technology",
     place: "Ahmedabad",
-    period: "Jun 2025 — Present",
+    period: "Jun 2025 → Present",
     points: [
       "Ship pixel-perfect, mobile-first UIs with React and Tailwind, translating Figma into reusable token-based components.",
       "Author GSAP + Lenis scroll interactions for premium client-facing experiences.",
-      "Own Agile Git workflows — feature branches, code reviews, sprint deliverables.",
+      "Own Agile Git workflows: feature branches, code reviews, sprint deliverables.",
     ],
   },
   {
     role: "Associate Web Designer & Developer",
     company: "Tridhya Tech",
     place: "Ahmedabad",
-    period: "Feb 2024 — May 2025",
+    period: "Feb 2024 → May 2025",
     points: [
       "Built scalable UI component libraries with React, Vue (Vuex) and Vuetify.",
       "Delivered WordPress sites with ACF custom fields at pixel-level fidelity.",
@@ -152,11 +152,11 @@ const EXPERIENCE = [
 ];
 
 const SERVICES = [
-  { icon: Code2, title: "Frontend Development", desc: "React, TypeScript, Tailwind — production-grade component architectures." },
+  { icon: Code2, title: "Frontend Development", desc: "React, TypeScript, Tailwind: production-grade component architectures." },
   { icon: Palette, title: "UI Engineering", desc: "Figma-to-code with pixel precision and token-based design systems." },
   { icon: Layers, title: "WordPress + ACF", desc: "Custom themes with maintainable, content-editor-friendly ACF fields." },
-  { icon: Zap, title: "Motion & Animation", desc: "GSAP, ScrollTrigger and Lenis — motion with purpose, not noise." },
-  { icon: Cpu, title: "Design Systems", desc: "Tokens, components, docs — one source of truth across products." },
+  { icon: Zap, title: "Motion & Animation", desc: "GSAP, ScrollTrigger and Lenis: motion with purpose, not noise." },
+  { icon: Cpu, title: "Design Systems", desc: "Tokens, components, docs: one source of truth across products." },
   { icon: Rocket, title: "Performance", desc: "Lighthouse-obsessed. Fast paints, small bundles, smooth 60fps." },
 ];
 
@@ -241,7 +241,7 @@ function SectionLabel({ n, label }: { n: string; label: string }) {
 
 const SECTION_IDS = ["about", "work", "experience", "playground", "contact"];
 
-/* Brand logo — a clean monogram tile: a crisp "K" in a rounded dark tile with an
+/* Brand logo, a clean monogram tile: a crisp "K" in a rounded dark tile with an
    accent status dot that breaks out of the corner and pulses. Magnetic, with a
    subtle tilt on hover. */
 function Logo() {
@@ -267,7 +267,7 @@ function Logo() {
       animate={{ x: p.x, y: p.y }}
       transition={{ type: "spring", stiffness: 250, damping: 18 }}
       className="group flex shrink-0 items-center rounded-full px-1.5 py-1 pl-3"
-      aria-label="Kavan Gami — UI Developer, back to top"
+      aria-label="Kavan Gami · UI Developer, back to top"
     >
       <span className="flex flex-col leading-none">
         <span className="kg-shimmer relative font-display text-base font-semibold tracking-tight sm:text-[17px]">
@@ -593,7 +593,7 @@ function Hero() {
             </div>
           </Reveal>
 
-          {/* tech stack — compact animated marquee, highlights on hover */}
+          {/* tech stack, compact animated marquee, highlights on hover */}
           <Reveal delay={0.6}>
             <div className="group/skills relative mt-6 max-w-xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
               <div className="marquee flex w-max gap-2 group-hover/skills:[animation-play-state:paused]">
@@ -692,7 +692,7 @@ function About() {
             >
               <img
                 src={aboutImg}
-                alt="Kavan Gami — 3D illustration"
+                alt="Kavan Gami · 3D illustration"
                 className="h-full w-full object-cover object-top transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
               />
@@ -711,7 +711,7 @@ function About() {
                     UI Developer &amp; Web Designer
                   </span>{" "}
                   with 2+ years turning Figma into pixel-perfect, token-based
-                  components — then layering in{" "}
+                  components, then layering in{" "}
                   <span className="text-foreground">GSAP</span> and{" "}
                   <span className="text-foreground">Lenis</span> so every
                   interface moves like something you want to keep touching.
@@ -900,7 +900,7 @@ function Skills() {
         <div className="mt-10 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <Reveal>
             <h2 className="font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium max-w-3xl">
-              A curated toolkit — not a laundry list.
+              A curated toolkit, not a laundry list.
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
@@ -1009,7 +1009,7 @@ function Experience() {
           <h2 className="mt-6 font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium max-w-3xl">
             A short, focused
             <span className="italic font-normal text-foreground/70"> career </span>
-            so far — built on real production work.
+            so far, built on real production work.
           </h2>
         </Reveal>
 
@@ -1062,7 +1062,7 @@ function Services() {
           </Reveal>
           <Reveal delay={0.1} className="lg:col-span-4">
             <p className="text-muted-foreground">
-              I handle the entire frontend layer — from tokens and components to
+              I handle the entire frontend layer, from tokens and components to
               motion and performance.
             </p>
           </Reveal>
@@ -1190,7 +1190,7 @@ function Achievements() {
             </h2>
           </div>
           <p className="md:col-span-4 text-background/60">
-            Two years, four teams, a lot of shipped pixels — and just getting
+            Two years, four teams, a lot of shipped pixels, and just getting
             started.
           </p>
         </div>
@@ -1374,7 +1374,7 @@ function Footer() {
         <div className="flex items-center gap-3">
           <img src={charMascot} alt="" className="h-10 w-10 rounded-full breathe" loading="lazy" />
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Kavan Gami — Built with love, GSAP & Lenis.
+            © {new Date().getFullYear()} Kavan Gami · Built with love, GSAP & Lenis.
           </p>
         </div>
         <div className="flex items-center gap-5 text-sm text-muted-foreground font-button">

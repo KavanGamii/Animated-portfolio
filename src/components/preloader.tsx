@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
  *
  * Plays ONCE per browser session (sessionStorage). The dark panel counts
  * 0 → 100 while a masked "Kavan Gami." reveal plays, then the whole curtain
- * lifts to reveal the site — inverting the site's own palette (foreground /
+ * lifts to reveal the site, inverting the site's own palette (foreground /
  * background / accent) so it feels like part of the same system.
  *
  * Want it to play only ONCE EVER (not once per session)? Swap the two
@@ -48,7 +48,7 @@ export function Preloader() {
     body.style.overflow = "hidden";
     window.scrollTo(0, 0);
 
-    // Respect users who don't want motion — snap to 100 and exit fast.
+    // Respect users who don't want motion, snap to 100 and exit fast.
     const reduced = window.matchMedia?.(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -114,7 +114,7 @@ export function Preloader() {
             <span>Loading</span>
           </motion.div>
 
-          {/* center — masked name reveal (mirrors the hero) */}
+          {/* center, masked name reveal (mirrors the hero) */}
           <h1 className="font-display text-[18vw] leading-[0.85] font-medium tracking-[-0.04em] sm:text-[12vw]">
             <span className="block overflow-hidden">
               <motion.span
@@ -138,7 +138,7 @@ export function Preloader() {
             </span>
           </h1>
 
-          {/* bottom — tagline, counter, progress bar */}
+          {/* bottom, tagline, counter, progress bar */}
           <div>
             <div className="flex items-end justify-between gap-6">
               <motion.p
@@ -147,7 +147,7 @@ export function Preloader() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.5 }}
               >
-                UI Developer &amp; Web Designer — crafting cinematic frontend
+                UI Developer &amp; Web Designer, crafting cinematic frontend
                 experiences.
               </motion.p>
               <p className="font-display text-6xl leading-none tracking-[-0.04em] tabular-nums sm:text-8xl">

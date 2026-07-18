@@ -77,23 +77,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Kavan Gami — UI Developer & Web Designer" },
+      { title: "Kavan Gami · UI Developer & Web Designer" },
       {
         name: "description",
         content:
-          "Kavan Gami — UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress.",
+          "Kavan Gami · UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress.",
       },
       { name: "author", content: "Kavan Gami" },
-      { property: "og:title", content: "Kavan Gami — UI Developer & Web Designer" },
+      { property: "og:title", content: "Kavan Gami · UI Developer & Web Designer" },
       {
         property: "og:description",
         content:
-          "Kavan Gami — UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress.",
+          "Kavan Gami · UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Kavan Gami — UI Developer & Web Designer" },
-      { name: "twitter:description", content: "Kavan Gami — UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress." },
+      { name: "twitter:title", content: "Kavan Gami · UI Developer & Web Designer" },
+      { name: "twitter:description", content: "Kavan Gami · UI Developer & Web Designer building cinematic frontend experiences with React, Tailwind CSS, GSAP, Lenis and WordPress." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c111318e-5479-413c-a328-f137a71fd010/id-preview-03586e3e--1b64d33d-c027-47ef-b202-18a9b2dc2a3a.lovable.app-1784012366761.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c111318e-5479-413c-a328-f137a71fd010/id-preview-03586e3e--1b64d33d-c027-47ef-b202-18a9b2dc2a3a.lovable.app-1784012366761.png" },
     ],
