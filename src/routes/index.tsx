@@ -674,7 +674,7 @@ function About() {
   const smooth = useSpring(yImg, { stiffness: 60, damping: 20 });
 
   return (
-    <section id="about" ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
+    <section id="about" ref={ref} className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16">
       <div className="mx-auto max-w-7xl">
         <Reveal><SectionLabel n="02" label="About" /></Reveal>
 
@@ -806,170 +806,89 @@ const SKILL_CATEGORIES = (() => {
   return Array.from(map, ([cat, items]) => ({ cat, items }));
 })();
 
-function SkillRow({
-  skill,
-  i,
-}: {
-  readonly skill: (typeof SKILLS)[number];
-  readonly i: number;
-}) {
-  const Icon = skill.icon;
-
-  return (
-    <motion.div
-      className="skill-row group relative"
-      whileHover={{ x: 6 }}
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-    >
-      <div className="flex items-center gap-4 py-4 sm:py-5 border-b border-foreground/[0.06] transition-colors duration-300 group-hover:border-accent/30">
-        {/* number */}
-        <span className="hidden sm:block w-8 text-right font-display text-sm text-foreground/15 transition-colors duration-300 group-hover:text-accent/50">
-          {String(i + 1).padStart(2, "0")}
-        </span>
-
-        {/* icon */}
-        <span className="relative grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-card border border-border transition-all duration-400 group-hover:bg-foreground group-hover:border-foreground group-hover:text-background group-hover:rotate-[-8deg] group-hover:scale-110">
-          <Icon className="h-[18px] w-[18px]" />
-          {/* glow ring */}
-          <span className="pointer-events-none absolute inset-0 rounded-xl ring-0 ring-accent/0 transition-all duration-400 group-hover:ring-[6px] group-hover:ring-accent/10" />
-        </span>
-
-        {/* name */}
-        <h3 className="font-display text-lg sm:text-xl tracking-tight transition-colors duration-300">
-          {skill.name}
-        </h3>
-
-        {/* spacer */}
-        <span className="flex-1" />
-
-        {/* animated line */}
-        <span className="hidden sm:block relative h-px flex-[0_0_120px] lg:flex-[0_0_180px] bg-foreground/[0.06] overflow-hidden rounded-full">
-          <motion.span
-            className="absolute inset-y-0 left-0 rounded-full bg-accent"
-            initial={{ width: 0 }}
-            whileInView={{ width: "100%" }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.2, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-          />
-        </span>
-
-        {/* arrow */}
-        <span className="grid h-8 w-8 place-items-center rounded-full bg-transparent transition-all duration-300 group-hover:bg-accent/10">
-          <ArrowUpRight className="h-3.5 w-3.5 text-foreground/20 transition-all duration-300 group-hover:text-accent group-hover:rotate-45" />
-        </span>
-      </div>
-    </motion.div>
-  );
-}
-
 function Skills() {
   const ref = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!ref.current) return;
-    const ctx = gsap.context(() => {
-      gsap.registerPlugin(ScrollTrigger);
-      // animate category blocks
-      gsap.from(".skill-category", {
-        y: 50,
-        opacity: 0,
-        duration: 0.9,
-        ease: "power3.out",
-        stagger: 0.15,
-        scrollTrigger: { trigger: ".skills-container", start: "top 80%" },
-      });
-      // animate individual rows
-      gsap.from(".skill-row", {
-        x: -30,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power3.out",
-        stagger: 0.04,
-        scrollTrigger: { trigger: ".skills-container", start: "top 75%" },
-      });
-    }, ref);
-    return () => ctx.revert();
-  }, []);
-
-  /* counter animation */
-  const totalSkills = SKILLS.length;
-  const totalCats = SKILL_CATEGORIES.length;
+  const row1 = SKILLS.slice(0, 4);
+  const row2 = SKILLS.slice(4, 8);
+  const row3 = SKILLS.slice(8, 12);
+  
+  const repeat = (arr: typeof SKILLS, times: number) => {
+    return Array(times).fill(arr).flat();
+  };
 
   return (
     <section
       id="skills"
       ref={ref}
-      className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg overflow-hidden"
+      className="relative py-28 sm:py-40 bg-foreground text-background overflow-hidden"
     >
-      {/* subtle background decoration */}
-      <div className="pointer-events-none absolute -right-40 top-20 h-[500px] w-[500px] rounded-full bg-accent/[0.03] blur-[120px]" />
-      <div className="pointer-events-none absolute -left-20 bottom-40 h-[300px] w-[300px] rounded-full bg-accent/[0.02] blur-[100px]" />
-
-      <div className="mx-auto max-w-7xl" ref={containerRef}>
-        {/* header */}
-        <Reveal><SectionLabel n="03" label="Skills" /></Reveal>
-        <div className="mt-10 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
-          <Reveal>
-            <h2 className="font-display text-4xl sm:text-6xl leading-[1.05] tracking-[-0.03em] font-medium max-w-3xl">
-              A curated toolkit,{" "}
-              <span className="italic font-normal text-foreground/70">not a laundry list.</span>
+      <div className="mx-auto max-w-7xl px-6 sm:px-10 lg:px-16 mb-20 sm:mb-32 relative z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-8">
+        <Reveal>
+          <div>
+            <div className="flex items-center gap-3 text-xs uppercase tracking-[0.3em] text-background/50 font-button">
+              <span className="text-background/30">03</span>
+              <span className="h-px w-8 bg-background/20" />
+              <span>Capabilities</span>
+            </div>
+            <h2 className="mt-6 font-display text-4xl sm:text-6xl lg:text-7xl leading-[1.05] tracking-[-0.03em] font-medium max-w-2xl">
+              Everything you need. <br />
+              <span className="italic font-normal text-background/60">Nothing you don't.</span>
             </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="flex items-center gap-8">
-              <div className="text-center">
-                <p className="font-display text-4xl sm:text-5xl font-medium text-accent">{totalSkills}</p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-button">
-                  Technologies
-                </p>
-              </div>
-              <span className="h-12 w-px bg-foreground/10" />
-              <div className="text-center">
-                <p className="font-display text-4xl sm:text-5xl font-medium">{totalCats}</p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-button">
-                  Domains
-                </p>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-
-        {/* skill rows grouped by category */}
-        <div className="skills-container mt-16 grid grid-cols-1 lg:grid-cols-2 gap-x-12 gap-y-14">
-          {SKILL_CATEGORIES.map(({ cat, items }) => (
-            <div key={cat} className="skill-category">
-              {/* category header */}
-              <div className="flex items-center gap-3 mb-2">
-                <span className="h-2 w-2 rounded-full bg-accent" />
-                <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground font-button">
-                  {cat}
-                </p>
-                <span className="flex-1 h-px bg-foreground/[0.06]" />
-                <span className="text-[11px] text-foreground/25 font-button">
-                  {String(items.length).padStart(2, "0")}
-                </span>
-              </div>
-
-              {/* skill rows */}
-              {items.map((s) => {
-                const globalIndex = SKILLS.findIndex((sk) => sk.name === s.name);
-                return <SkillRow key={s.name} skill={s} i={globalIndex} />;
-              })}
-            </div>
-          ))}
-        </div>
-
-        {/* bottom tagline */}
-        <Reveal delay={0.2}>
-          <div className="mt-20 flex items-center justify-center gap-4">
-            <span className="h-px flex-1 max-w-[120px] bg-foreground/[0.08]" />
-            <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground/70 font-button text-center">
-              Every tool ships in production — deep, not wide
-            </p>
-            <span className="h-px flex-1 max-w-[120px] bg-foreground/[0.08]" />
           </div>
         </Reveal>
+        <Reveal delay={0.1}>
+          <p className="text-sm leading-relaxed text-background/60 max-w-xs">
+            A curated toolkit mastered for production. Depth over breadth.
+          </p>
+        </Reveal>
+      </div>
+
+      {/* Marquee Bands */}
+      <div className="relative flex flex-col gap-6 sm:gap-10 -rotate-3 scale-110 pointer-events-auto cursor-default">
+        
+        {/* Row 1 */}
+        <div className="group/row flex w-max marquee hover:[animation-play-state:paused]">
+          {repeat(row1, 8).map((s, i) => {
+            const Icon = s.icon;
+            const isMobileHighlighted = i % 3 === 0;
+            return (
+              <span key={i} className={`group/item flex items-center gap-6 mx-6 font-display text-6xl sm:text-[8rem] lg:text-[10rem] leading-none uppercase tracking-tighter transition-colors duration-500 hover:text-accent active:text-accent ${isMobileHighlighted ? 'text-accent lg:text-transparent' : 'text-transparent'}`} style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                {s.name}
+                <Icon className="h-10 w-10 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-accent ml-6" style={{ strokeWidth: 1.5 }} />
+              </span>
+            );
+          })}
+        </div>
+
+        {/* Row 2 (Reverse) */}
+        <div className="group/row flex w-max marquee hover:[animation-play-state:paused]" style={{ animationDirection: "reverse" }}>
+          {repeat(row2, 8).map((s, i) => {
+            const Icon = s.icon;
+            const isMobileHighlighted = i % 3 === 1;
+            return (
+              <span key={i} className={`group/item flex items-center gap-6 mx-6 font-display text-6xl sm:text-[8rem] lg:text-[10rem] leading-none uppercase tracking-tighter transition-colors duration-500 hover:text-accent active:text-accent ${isMobileHighlighted ? 'text-accent lg:text-transparent' : 'text-transparent'}`} style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                <Icon className="h-10 w-10 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-accent mr-6" style={{ strokeWidth: 1.5 }} />
+                {s.name}
+              </span>
+            );
+          })}
+        </div>
+
+        {/* Row 3 */}
+        <div className="group/row flex w-max marquee hover:[animation-play-state:paused]">
+          {repeat(row3, 8).map((s, i) => {
+            const Icon = s.icon;
+            const isMobileHighlighted = i % 3 === 2;
+            return (
+              <span key={i} className={`group/item flex items-center gap-6 mx-6 font-display text-6xl sm:text-[8rem] lg:text-[10rem] leading-none uppercase tracking-tighter transition-colors duration-500 hover:text-accent active:text-accent ${isMobileHighlighted ? 'text-accent lg:text-transparent' : 'text-transparent'}`} style={{ WebkitTextStroke: '1px rgba(255,255,255,0.15)' }}>
+                {s.name}
+                <Icon className="h-10 w-10 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-accent ml-6" style={{ strokeWidth: 1.5 }} />
+              </span>
+            );
+          })}
+        </div>
+
       </div>
     </section>
   );
@@ -994,7 +913,7 @@ function Work() {
   }, []);
 
   return (
-    <section id="work" ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
+    <section id="work" ref={ref} className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16">
       <div className="mx-auto max-w-7xl">
         <div className="flex items-end justify-between gap-6">
           <Reveal>
@@ -1181,7 +1100,7 @@ function Services() {
   }, []);
 
   return (
-    <section id="services" ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
+    <section id="services" ref={ref} className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16">
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-20">
           <Reveal>
@@ -1299,7 +1218,7 @@ function Process() {
   }, []);
 
   return (
-    <section ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
+    <section ref={ref} className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionLabel n="07" label="Creative Process" />
@@ -1310,7 +1229,7 @@ function Process() {
           </h2>
         </Reveal>
 
-        <div className="proc-grid mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-0">
+        <div className="proc-grid mt-10 sm:mt-20 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-0">
           {PROCESS.map((p, i) => {
             const Icon = p.icon;
             return (
@@ -1363,7 +1282,7 @@ function Achievements() {
   }, []);
 
   return (
-    <section id="achievements" ref={ref} className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-foreground text-background">
+    <section id="achievements" ref={ref} className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16 bg-foreground text-background">
       <div className="mx-auto max-w-7xl">
         <SectionLabelDark n="09" label="Achievements" />
         <div className="mt-10 grid grid-cols-1 md:grid-cols-12 gap-10 items-end">
@@ -1422,7 +1341,7 @@ function Playground() {
     setPos({ x: e.clientX - r.left - r.width / 2, y: e.clientY - r.top - r.height / 2 });
   };
   return (
-    <section id="playground" className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16">
+    <section id="playground" className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16">
       <div className="mx-auto max-w-7xl">
         <Reveal><SectionLabel n="10" label="Playground" /></Reveal>
         <Reveal>
@@ -1493,7 +1412,7 @@ function MagneticButton({ children }: { children: React.ReactNode }) {
 
 function Contact() {
   return (
-    <section id="contact" className="relative py-28 sm:py-40 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
+    <section id="contact" className="relative py-20 sm:py-28 px-6 sm:px-10 lg:px-16 bg-secondary-bg">
       <div className="mx-auto max-w-7xl">
         <Reveal><SectionLabel n="11" label="Contact" /></Reveal>
         <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
@@ -1510,10 +1429,10 @@ function Contact() {
             <Reveal delay={0.15}>
               <a
                 href="mailto:kavangami13@gmail.com"
-                className="group mt-10 inline-flex items-center gap-4 rounded-full bg-foreground px-8 py-5 text-background"
+                className="group mt-10 inline-flex items-center gap-4 rounded-full bg-foreground px-4 py-2 sm:px-8 sm:py-5 text-background"
               >
-                <Mail className="h-5 w-5" />
-                <span className="font-button text-lg">kavangami13@gmail.com</span>
+                <Mail className="h-5 w-5 sm:block hidden" />
+                <span className="font-button text-lg break-words">Let's Connect</span>
                 <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </a>
             </Reveal>
@@ -1546,7 +1465,7 @@ function ContactLink({ icon: Icon, label, v, href }: { icon: typeof Mail; label:
       <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground font-button flex items-center gap-2">
         <Icon className="h-3.5 w-3.5" /> {label}
       </p>
-      <p className="mt-2 font-display text-lg group-hover:text-accent transition-colors">{v}</p>
+      <p className="mt-2 font-display text-lg group-hover:text-accent transition-colors break-words">{v}</p>
     </a>
   );
 }
@@ -1556,7 +1475,7 @@ function Footer() {
     <footer className="relative overflow-hidden border-t border-border">
       {/* background video */}
       <video
-        className="absolute inset-0 h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover object-[80%_center] sm:object-center"
         src={footerVideo}
         autoPlay
         muted
